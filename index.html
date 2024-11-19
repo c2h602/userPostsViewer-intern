@@ -6,17 +6,20 @@
     <title>User posts</title>
     <link rel="stylesheet" href="style.css">
     <script src="index.js" defer></script>
+    <script src="themeToggle.js" defer></script>
 </head>
 <body>
-    <header class="header"></header>
+    <header class="header">
+        <button id="themeToggle">🔆</button>
+    </header>
 
     <div class="container">
     
         <div class="search">
-            <input type="search" placeholder="Find an user..." class="search__input" id="usernameInput">
+            <input type="search" placeholder="Find a user..." class="search__input" id="usernameInput">
             <button id="btn">Search</button>
         </div>
-       
+
         <div class="card">
 
             <ul class="card__list"></ul>
@@ -25,12 +28,6 @@
         </div>
 
     </div>
-
-    <!-- <div class="container-posts">
-        <h2 class="title-post">Title</h2>
-        <p class="body-post">body</p>
-        <a href="#" class="comments-post">comments</a>
-    </div> -->
     
 </body>
 </html>

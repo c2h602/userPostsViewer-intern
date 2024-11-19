@@ -20,6 +20,14 @@ async function createUsersList() {
         user.username.toLowerCase().includes(username)
     );
 
+    if (filteredUsers.length === 0) {
+        const notFoundMessage = document.createElement('h2');
+        notFoundMessage.textContent = 'User not found... Try again 🔎';
+        notFoundMessage.style.textAlign = 'center';
+        cardList.appendChild(notFoundMessage);
+        return;
+    }
+
     filteredUsers.forEach(user => {
 
         const newUser = document.createElement('li');
@@ -86,7 +94,7 @@ cardList.addEventListener('click', async (event) => {
 
         const posts = document.createElement('a');
         posts.href = '#';
-        posts.textContent = 'Posts';
+        posts.textContent = 'Posts  ▽';
         posts.setAttribute('user-id', userId);
         posts.classList.add('card__user_posts');
 
@@ -106,6 +114,7 @@ document.body.addEventListener('click', async (event) => {
 
     if (event.target.classList.contains('card__user_posts')) {
 
+        
         const userId = event.target.getAttribute('user-id');
 
         const [postsResponse, commentsResponse] = await Promise.all([
@@ -117,6 +126,8 @@ document.body.addEventListener('click', async (event) => {
         const comments = await commentsResponse.json();
 
         const postsFiltered = posts.filter(post => post.userId == userId);
+
+        document.querySelectorAll('.container-posts').forEach(post => post.remove());
 
         postsFiltered.forEach(post => {
 
