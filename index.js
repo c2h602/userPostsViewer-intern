@@ -34,10 +34,15 @@ async function createUsersList() {
         newUser.classList.add('card__item');
 
         const userLink = document.createElement('a');
-        userLink.href = '#';
+        userLink.href = `/${user.username}/${user.id}/`;
         userLink.textContent = `${user.username}`;
         userLink.classList.add('card__username');
         userLink.id = `${user.id}`;
+
+        userLink.addEventListener('click', (event) => {
+            event.preventDefault();
+            history.pushState({}, '', `/${user.username}/`);
+        })
 
         const userPosts = posts.filter(post => post.userId === user.id);
 
@@ -93,10 +98,15 @@ cardList.addEventListener('click', async (event) => {
         website.classList.add('card__user_website');
 
         const posts = document.createElement('a');
-        posts.href = '#';
+        posts.href = `/${user.username}/posts/`;
         posts.textContent = 'Posts  ▽';
         posts.setAttribute('user-id', userId);
         posts.classList.add('card__user_posts');
+
+        posts.addEventListener('click', (event) => {
+            event.preventDefault();
+            history.pushState({}, '', `/${user.username}/posts/`);
+        })
 
         cardUser.appendChild(username);
         cardUser.appendChild(name);
@@ -117,15 +127,18 @@ document.body.addEventListener('click', async (event) => {
         
         const userId = event.target.getAttribute('user-id');
 
-        const [postsResponse, commentsResponse] = await Promise.all([
+        const [usersResponse, postsResponse, commentsResponse] = await Promise.all([
+            fetch('https://jsonplaceholder.typicode.com/users'),
             fetch('https://jsonplaceholder.typicode.com/posts'),
             fetch('https://jsonplaceholder.typicode.com/comments')
         ]);
 
+        const users = await usersResponse.json();
         const posts = await postsResponse.json();
         const comments = await commentsResponse.json();
 
         const postsFiltered = posts.filter(post => post.userId == userId);
+        const user = users.find(x => x.id == userId);
 
         document.querySelectorAll('.container-posts').forEach(post => post.remove());
 
@@ -145,10 +158,15 @@ document.body.addEventListener('click', async (event) => {
             const commentsFiltered = comments.filter(comment => comment.postId == post.id);
 
             const commentsLink = document.createElement('a');
-            commentsLink.href = '#';
+            commentsLink.href = `/comments?postId=${post.id}`;
             commentsLink.textContent = `💬 ${commentsFiltered.length}`;
             commentsLink.setAttribute('post-id', post.id);
             commentsLink.classList.add('comments-post');
+
+            commentsLink.addEventListener('click', (event) => {
+                event.preventDefault();
+                history.pushState({}, '', `/${user.username}/posts/comments?postId=${post.id}`);
+            })
 
             containerPosts.appendChild(title);
             containerPosts.appendChild(body);
